@@ -1,0 +1,8 @@
+# arquivos do emacs e vim
+*~
+.*.swp
+.#*
+\#*#
+
+# gerados pelo javac
+*.class
