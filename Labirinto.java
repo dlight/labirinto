@@ -8,9 +8,9 @@ public class Labirinto extends JFrame {
 
     public Labirinto() {
         add(new Tela(tela_w, tela_h, grafo_w, grafo_h));
+        pack();
 
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        setSize(tela_w, tela_h);
         setLocationRelativeTo(null);
         setTitle("Labirinto");
         setResizable(false);

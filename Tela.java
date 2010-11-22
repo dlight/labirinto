@@ -2,6 +2,8 @@ import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 
+import java.awt.Dimension;
+
 import java.awt.Toolkit;
 
 import java.awt.event.ActionEvent;
@@ -10,62 +12,85 @@ import java.awt.event.ActionListener;
 import javax.swing.JPanel;
 import javax.swing.Timer;
 
+import java.util.Random;
+
 public class Tela extends JPanel implements ActionListener {
     Timer timer;
-    int tela_w, tela_h;
-    int grafo_w, grafo_h;
+    int tela_largura, tela_altura;
+    int grafo_largura, grafo_altura;
 
-    int passo_x;
+    int passo_x, passo_y;
 
-    int y;
+    boolean[][] labirinto_x;
+    boolean[][] labirinto_y;
 
-    public Tela(int tela_largura, int tela_altura,
-                int grafo_largura, int grafo_altura) {
-        tela_w = tela_largura;
-        tela_h = tela_altura;
-        grafo_w = grafo_largura;
-        grafo_h = grafo_altura;
+    Random rnd;
+
+    public Tela(int tela_w, int tela_h, int grafo_w, int grafo_h) {
+        tela_largura = tela_w;
+        tela_altura = tela_h;
+
+        grafo_largura = grafo_w;
+        grafo_altura = grafo_h;
 
         passo_x = tela_largura / grafo_largura;
+        passo_y = tela_altura / grafo_altura;
 
-        y = 0;
+        labirinto_x = new boolean[grafo_w][grafo_h];
+        labirinto_y = new boolean[grafo_w][grafo_h];
+        rnd = new Random();
 
-        setBackground(Color.black);
+        novo_labirinto();
+
+        setPreferredSize(new Dimension(tela_w, tela_h));
+        setBackground(Color.white);
         setDoubleBuffered(true);
 
-        timer = new Timer(25, this);
+        timer = new Timer(1000, this);
         timer.start();
     }
 
-    public void draw(Graphics2D g) {
-        g.setColor(Color.white);
+    public void desenhar(Graphics2D g) {
+        g.setColor(Color.black);
 
-        for (int i = 0; i < tela_w; i += passo_x) {
-            g.drawLine(i, 0, i, tela_h);
+        for (int x = 0; x < grafo_largura; x++) {
+            for (int y = 0; y < grafo_altura; y++) {
+                if (labirinto_x[x][y])
+                    g.drawLine(x * passo_x,
+                               y * passo_y,
+                               x * passo_x,
+                               (y+1) * passo_y);
+
+                if (labirinto_y[x][y])
+                    g.drawLine(x * passo_x,
+                               y * passo_y,
+                               (x+1) * passo_x,
+                               y * passo_y);
+            }
         }
-
-        g.setColor(Color.red);
-
-        g.drawLine(0, y, tela_w, y);
     }
 
 
     public void paint(Graphics tela) {
         super.paint(tela);
 
-        draw((Graphics2D) tela);
+        desenhar((Graphics2D) tela);
 
         Toolkit.getDefaultToolkit().sync();
         tela.dispose();
     }
 
+    public void novo_labirinto() {
+        for (int x = 0; x < grafo_largura; x++) {
+            for (int y = 0; y < grafo_altura; y++) {
+                labirinto_x[x][y] = rnd.nextBoolean();
+                labirinto_y[x][y] = rnd.nextBoolean();
+            }
+        }
+    }
 
     public void actionPerformed(ActionEvent e) {
-        y += 1;
-
-        if (y > tela_h)
-            y = 0;
-
+        novo_labirinto();
         repaint();  
     }
 }
