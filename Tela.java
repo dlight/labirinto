@@ -12,14 +12,23 @@ import javax.swing.Timer;
 
 public class Tela extends JPanel implements ActionListener {
     Timer timer;
-    int width, height;
+    int tela_w, tela_h;
+    int grafo_w, grafo_h;
 
-    int x;
+    int passo_x;
 
-    public Tela(int w, int h) {
-        width = w;
-        height = h;
-        x = 0;
+    int y;
+
+    public Tela(int tela_largura, int tela_altura,
+                int grafo_largura, int grafo_altura) {
+        tela_w = tela_largura;
+        tela_h = tela_altura;
+        grafo_w = grafo_largura;
+        grafo_h = grafo_altura;
+
+        passo_x = tela_largura / grafo_largura;
+
+        y = 0;
 
         setBackground(Color.black);
         setDoubleBuffered(true);
@@ -29,9 +38,15 @@ public class Tela extends JPanel implements ActionListener {
     }
 
     public void draw(Graphics2D g) {
-        g.setColor(Color.blue);
+        g.setColor(Color.white);
 
-        g.drawLine(x, 0, x, height);
+        for (int i = 0; i < tela_w; i += passo_x) {
+            g.drawLine(i, 0, i, tela_h);
+        }
+
+        g.setColor(Color.red);
+
+        g.drawLine(0, y, tela_w, y);
     }
 
 
@@ -46,10 +61,10 @@ public class Tela extends JPanel implements ActionListener {
 
 
     public void actionPerformed(ActionEvent e) {
-        x += 1;
+        y += 1;
 
-        if (x > width)
-            x = 0;
+        if (y > tela_h)
+            y = 0;
 
         repaint();  
     }
