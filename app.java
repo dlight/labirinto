@@ -21,7 +21,11 @@ public class app extends JFrame {
 
     public static void main(String[] args) {
         grafo g = new grafo(2, 3);
-        g.print();
+        System.out.printf("Antes:\n\n");
+        g.print2();
+        g.kruskal();
+        System.out.printf("\nDepois:\n\n");
+        g.print2();
 
         //new app();
     }
