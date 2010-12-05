@@ -14,7 +14,7 @@ import javax.swing.Timer;
 
 import java.util.Random;
 
-public class Tela extends JPanel implements ActionListener {
+public class tela extends JPanel implements ActionListener {
     Timer timer;
     int borda;
     int tela_largura, tela_altura;
@@ -26,7 +26,7 @@ public class Tela extends JPanel implements ActionListener {
 
     Random rnd;
 
-    public Tela(int borda, int tela_w, int tela_h, int casas_w, int casas_h) {
+    public tela(int borda, int tela_w, int tela_h, int casas_w, int casas_h) {
         tela_largura = tela_w;
         tela_altura = tela_h;
 

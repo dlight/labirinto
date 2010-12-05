@@ -2,11 +2,11 @@
 .PHONY: clean
 .PHONY: run
 
-all : Labirinto.class Tela.class
+all : app.class grafo.class tela.class
 clean :
 	rm -f *.class
 run : all
-	java Labirinto
+	java app
 
 %.class : %.java
 	javac -source 1.6 $<

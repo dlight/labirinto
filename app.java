@@ -1,14 +1,14 @@
 import javax.swing.JFrame;
 
-public class Labirinto extends JFrame {
+public class app extends JFrame {
     static int tela_w = 420;
     static int tela_h = 320;
     static int casas_w = 40;
     static int casas_h = 30;
     static int borda = 10;
 
-    public Labirinto() {
-        add(new Tela(borda, tela_w, tela_h, casas_w, casas_h));
+    public app() {
+        add(new tela(borda, tela_w, tela_h, casas_w, casas_h));
         pack();
 
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -20,6 +20,9 @@ public class Labirinto extends JFrame {
     }
 
     public static void main(String[] args) {
-        new Labirinto();
+        grafo g = new grafo(2, 3);
+        g.print();
+
+        //new app();
     }
 }
