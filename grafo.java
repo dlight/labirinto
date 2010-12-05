@@ -14,25 +14,15 @@ public class grafo {
 
         matriz = new boolean[n][n];
 
-        System.out.printf("* (%d, %d) / (%d, %d)\n", w, h, w-1, h-1);
-
         for (int i = 0; i < w; i++) {
             for (int j = 0; j < h; j++) {
-                System.out.printf("\n(%d, %d)\n", i, j);
-
-                if (i != w-1) {
-                    System.out.printf("  (%d, %d) -> (%d, %d)\n", i, j, i+1, j);
+                if (i != w-1)
                     matriz[i+j*w][i+1+j*w] = true;
-                }
 
-                if (j != h-1) {
-                    System.out.printf("  (%d, %d) -> (%d, %d)\n", i, j, i, j+1);
+                if (j != h-1)
                     matriz[i+j*w][i+(j+1)*w] = true;
-                }
             }
         }
-
-        System.out.printf("\n");
     }
 
     public void print() {
