@@ -47,7 +47,7 @@ public class grafo {
 
     private ArrayList<par<boolean[][], boolean[]>> kr_init() {
         ArrayList<par<boolean[][], boolean[]>> p =
-            new ArrayList<par<boolean[][], boolean[]>>();
+            new ArrayList<par<boolean[][], boolean[]>>(matriz.length);
 
         int n = matriz.length;
 
