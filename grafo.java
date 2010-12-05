@@ -55,6 +55,8 @@ public class grafo {
             boolean[] v = new boolean[n];
             v[i] = true;
 
+            //System.out.printf("-- %d\n", i);
+
             p.add(new par<boolean[][], boolean[]>(new boolean[n][n], v));
         }
 
@@ -114,6 +116,38 @@ public class grafo {
         }
 
         matriz = floresta.get(0).esq;
+    }
+
+    public boolean[][] linhas_horizontais() {
+        boolean[][] paredes = new boolean[width][height + 1];
+
+        for (int i = 0; i < width; i++) {
+            paredes[i][0] = true;
+            paredes[i][height] = true;
+        }
+
+        for (int i = 0; i < width; i++)
+            for (int j = 0; j < height-1; j++)
+                if (!matriz[i+j*width][i+(j+1)*width])
+                    paredes[i][j+1] = true;
+
+        return paredes;
+    }
+
+    public boolean[][] linhas_verticais() {
+        boolean[][] paredes = new boolean[width + 1][height];
+
+        for (int i = 1; i < height; i++)
+            paredes[0][i] = true;
+        for (int i = 0; i < height-1; i++)
+            paredes[width][i] = true;
+
+        for (int i = 0; i < width-1; i++)
+            for (int j = 0; j < height; j++)
+                if (!matriz[i+j*width][i+1+j*width])
+                    paredes[i+1][j] = true;
+
+        return paredes;
     }
 
     public void print() {

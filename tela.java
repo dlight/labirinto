@@ -12,8 +12,6 @@ import java.awt.event.ActionListener;
 import javax.swing.JPanel;
 import javax.swing.Timer;
 
-import java.util.Random;
-
 public class tela extends JPanel implements ActionListener {
     Timer timer;
     int borda;
@@ -24,29 +22,25 @@ public class tela extends JPanel implements ActionListener {
     boolean[][] linhas_horizontais;
     boolean[][] linhas_verticais;
 
-    Random rnd;
-
-    public tela(int borda, int tela_w, int tela_h, int casas_w, int casas_h) {
+    public tela(int borda, int tela_w, int tela_h, int casas_w, int casas_h,
+                boolean[][] linhas_horizontais, boolean[][] linhas_verticais) {
         tela_largura = tela_w;
         tela_altura = tela_h;
+
+        this.linhas_horizontais = linhas_horizontais;
+        this.linhas_verticais = linhas_verticais;
 
         this.borda = borda;
 
         passo_x = (tela_largura - 2*borda) / casas_w;
         passo_y = (tela_altura - 2*borda) / casas_h;
 
-        linhas_horizontais = new boolean[casas_w][casas_h + 1];
-        linhas_verticais = new boolean[casas_w + 1][casas_h];
-        rnd = new Random();
-
-        novo_labirinto();
-
         setPreferredSize(new Dimension(tela_w, tela_h));
         setBackground(Color.white);
         setDoubleBuffered(true);
 
-        timer = new Timer(1000, this);
-        timer.start();
+        //timer = new Timer(1000, this);
+        //timer.start();
     }
 
     public void desenhar_linha(Graphics2D g, int x0, int y0, int x1, int y1) {
@@ -81,18 +75,7 @@ public class tela extends JPanel implements ActionListener {
         tela.dispose();
      }
 
-    public void novo_labirinto() {
-        for (int x = 0; x < linhas_verticais.length; x++)
-            for (int y = 0; y < linhas_verticais[x].length; y++)
-                linhas_verticais[x][y] = rnd.nextBoolean();
-
-        for (int x = 0; x < linhas_horizontais.length; x++)
-            for (int y = 0; y < linhas_horizontais[x].length; y++)
-                linhas_horizontais[x][y] = rnd.nextBoolean();
-    }
-
     public void actionPerformed(ActionEvent e) {
-        novo_labirinto();
         repaint();  
     }
 }
