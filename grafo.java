@@ -95,7 +95,6 @@ public class grafo<
                 m[topo % width][topo / width] = "topo";
                 s.pop();
                 fl = true;
-                //m[s.peek() % width][s.peek() / width] = "topo";
             }
             else {
                 int i = t.get(t.size() - 1);
@@ -109,9 +108,6 @@ public class grafo<
 
                 int x = topo % width;
                 int y = topo / width;
-
-                if (vis != -1)
-                    System.out.printf("vis: %s, topo: %s\n", m[xv][yv], m[x][y]);
 
                 if (vis != -1 && (m[xv][yv] == null || m[xv][yv].equals("topo")))
                     m[xv][yv] = "caminho";

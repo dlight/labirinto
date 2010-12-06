@@ -12,13 +12,13 @@ import javax.swing.JFrame;
 import java.util.HashSet;
 
 public class app extends JFrame {
-    static int tela_w = 420;
-    static int tela_h = 320;
-    static int casas_w = 16;
-    static int casas_h = 12;
-    static int borda = 10;
+    static int tela_w = 824;
+    static int tela_h = 624;
+    static int casas_w = 40;
+    static int casas_h = 30;
+    static int borda = 12;
 
-    static int sleep = 200;
+    static int sleep = 80;
 
     public app() {
         grafo<par<Integer, Integer>, par<HashSet<par<Integer, Integer>>, HashSet<Integer>>> g =

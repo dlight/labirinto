@@ -70,39 +70,47 @@ public class tela extends JPanel implements gancho {
                     desenhar_linha(g, x, y, x, y+1);
     }
 
+    private void des_round(Graphics2D g, Color c, int i, int j, int s, int r) {
+        g.setColor(c);
+
+        int p_x = passo_x < s ? 1 : passo_x / s;
+        int p_y = passo_y < s ? 1 : passo_y / s;
+
+        g.fillRoundRect(borda + p_x + i*passo_x,
+                        borda + p_y + j*passo_y,
+                        passo_x - 2*p_x,
+                        passo_y - 2*p_y,
+                        r, r);
+    }
+
+    private void des_rect(Graphics2D g, Color c, int i, int j, int s) {
+        g.setColor(c);
+
+        int p_x = passo_x < s ? 1 : passo_x / s;
+        int p_y = passo_y < s ? 1 : passo_y / s;
+
+        g.fillRect(borda + p_x + i*passo_x,
+                   borda + p_y + j*passo_y,
+                   passo_x - 2*p_x,
+                   passo_y - 2*p_y);
+    }
+
     public void desenhar_estado(Graphics2D g) {
         if (estado == null)
             return;
 
-        System.out.printf("..?\n");
-
         for (int i = 0; i < estado.length; i++) {
             for (int j = 0; j < estado[i].length; j++) {
-                if (estado[i][j] == null) {
+                if (estado[i][j] == null)
                     g.setColor(Color.white);
-                }
-                else if (estado[i][j].equals("topo")) {
-                    System.out.printf("topo: %d, %d\n", i, j);
-
-                    g.setColor(Color.red);
-                }
-                else if (estado[i][j].equals("caminho")) {
-                    System.out.printf("caminho: %d, %d\n", i, j);
-                    g.setColor(Color.magenta);
-                }
-                else if (estado[i][j].equals("lixo")) {
-                    System.out.printf("lixo: %d, %d\n", i, j);
-                    g.setColor(Color.gray);
-                }
-                else if (estado[i][j].equals("fim")) {
-                    System.out.printf("fim: %d, %d\n", i, j);
-                    g.setColor(Color.yellow);
-                }
-
-                g.fillRect(borda + 2 + i*passo_x,
-                           borda + 2 + j*passo_y,
-                           passo_x - 4,
-                           passo_y - 4);
+                else if (estado[i][j].equals("topo"))
+                    des_round(g, Color.red, i, j, 12, 5);
+                else if (estado[i][j].equals("caminho"))
+                    des_round(g, Color.magenta, i, j, 6, 10);
+                else if (estado[i][j].equals("lixo"))
+                    des_rect(g, new Color(230, 230, 230), i, j, 4);
+                else if (estado[i][j].equals("fim"))
+                    des_round(g, Color.cyan, i, j, 12, 5);
             }
         }
     }
