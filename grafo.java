@@ -10,13 +10,6 @@ public class grafo {
             esq = e;
             dir = d;
         }
-        public boolean equals(par<E, D> p) {
-            return esq.equals(p.esq) && dir.equals(p.dir);
-        }
-        
-        public int hashCode() {
-            return (esq == null ? 0 : esq.hashCode()) * 31 + (dir == null ? 0 : dir.hashCode());
-        }
     }
 
     private HashSet<par<Integer, Integer>> matriz;
