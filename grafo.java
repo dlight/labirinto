@@ -17,7 +17,6 @@ public class grafo<
     A extends par<Integer, Integer>,
               E extends par<HashSet<par<Integer, Integer>>, HashSet<Integer>>>
 
-
     implements gancho {
     private HashSet<A> matriz;
     private int width;
@@ -80,14 +79,23 @@ public class grafo<
 
         String[][] m = new String[width][height];
 
+
+        boolean fl = false;
+
         int topo, vis;
         for (topo = s.peek(), vis = -1; topo != width*height-1; vis = topo, topo = s.peek()) {
-            ArrayList<Integer> t = a.get(topo);
+            if (fl) {
+                m[vis % width][vis / width] = "lixo";
+                fl = false;
+            }
 
+            ArrayList<Integer> t = a.get(topo);
             if (t.size() == 0) {
-                m[topo % width][topo / width] = "lixo";
+                m[vis % width][vis / width] = "lixo";
+                m[topo % width][topo / width] = "topo";
                 s.pop();
-                m[s.peek() % width][s.peek() / width] = "topo";
+                fl = true;
+                //m[s.peek() % width][s.peek() / width] = "topo";
             }
             else {
                 int i = t.get(t.size() - 1);
@@ -99,12 +107,14 @@ public class grafo<
                 int xv = vis % width;
                 int yv = vis / width;
 
-                if (vis != -1 && (m[xv][yv] == null ||
-                                  m[xv][yv].equals("topo")))
-                    m[xv][yv] = "caminho";
-
                 int x = topo % width;
                 int y = topo / width;
+
+                if (vis != -1)
+                    System.out.printf("vis: %s, topo: %s\n", m[xv][yv], m[x][y]);
+
+                if (vis != -1 && (m[xv][yv] == null || m[xv][yv].equals("topo")))
+                    m[xv][yv] = "caminho";
 
                 m[x][y] = "topo";
             }

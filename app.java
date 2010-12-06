@@ -14,9 +14,11 @@ import java.util.HashSet;
 public class app extends JFrame {
     static int tela_w = 420;
     static int tela_h = 320;
-    static int casas_w = 4;
-    static int casas_h = 3;
+    static int casas_w = 16;
+    static int casas_h = 12;
     static int borda = 10;
+
+    static int sleep = 200;
 
     public app() {
         grafo<par<Integer, Integer>, par<HashSet<par<Integer, Integer>>, HashSet<Integer>>> g =
@@ -26,7 +28,7 @@ public class app extends JFrame {
         g.kruskal();
 
         tela t = new tela(borda, tela_w, tela_h, casas_w, casas_h,
-                        g.linhas_horizontais(), g.linhas_verticais());
+                          g.linhas_horizontais(), g.linhas_verticais(), sleep);
 
         add(t);
         pack();

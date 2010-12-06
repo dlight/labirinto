@@ -30,10 +30,14 @@ public class tela extends JPanel implements gancho {
 
     String[][] estado;
 
+    int tm_sleep;
+
     public tela(int borda, int tela_w, int tela_h, int casas_w, int casas_h,
-                boolean[][] linhas_horizontais, boolean[][] linhas_verticais) {
+                boolean[][] linhas_horizontais, boolean[][] linhas_verticais, int tm_sleep) {
         tela_largura = tela_w;
         tela_altura = tela_h;
+
+        this.tm_sleep = tm_sleep;
 
         this.linhas_horizontais = linhas_horizontais;
         this.linhas_verticais = linhas_verticais;
@@ -132,7 +136,7 @@ public class tela extends JPanel implements gancho {
         estado = array_copy(m);
         repaint();
         try {
-            Thread.sleep(1000);
+            Thread.sleep(tm_sleep);
         }
         catch(InterruptedException ie) {
             System.out.println("Ahn?\n");
