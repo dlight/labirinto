@@ -16,7 +16,8 @@ public class app extends JFrame {
     static int borda = 10;
 
     public app() {
-        grafo g = new grafo(casas_w, casas_h);
+        grafo<par<Integer, Integer>> g =
+            new grafo<par<Integer, Integer>>(casas_w, casas_h);
 
         g.kruskal();
 
