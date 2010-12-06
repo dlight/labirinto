@@ -8,6 +8,9 @@
 
 import javax.swing.JFrame;
 
+
+import java.util.HashSet;
+
 public class app extends JFrame {
     static int tela_w = 420;
     static int tela_h = 320;
@@ -16,8 +19,9 @@ public class app extends JFrame {
     static int borda = 10;
 
     public app() {
-        grafo<par<Integer, Integer>> g =
-            new grafo<par<Integer, Integer>>(casas_w, casas_h);
+        grafo<par<Integer, Integer>, par<HashSet<par<Integer, Integer>>, HashSet<Integer>>> g =
+            new grafo<par<Integer, Integer>,
+            par<HashSet<par<Integer, Integer>>, HashSet<Integer>>>(casas_w, casas_h);
 
         g.kruskal();
 

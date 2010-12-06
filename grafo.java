@@ -13,8 +13,13 @@ import java.util.Queue;
 import java.util.Stack;
 import java.util.HashSet;
 
-public class grafo<P extends par<Integer, Integer>> implements gancho {
-    private HashSet<P> matriz;
+public class grafo<
+    A extends par<Integer, Integer>,
+              E extends par<HashSet<par<Integer, Integer>>, HashSet<Integer>>>
+
+
+    implements gancho {
+    private HashSet<A> matriz;
     private int width;
     private int height;
 
@@ -22,15 +27,15 @@ public class grafo<P extends par<Integer, Integer>> implements gancho {
         this.width = w;
         this.height = h;
 
-        matriz = new HashSet<P>();
+        matriz = new HashSet<A>();
 
         for (int i = 0; i < w; i++) {
             for (int j = 0; j < h; j++) {
                 if (i != w-1)
-                    matriz.add((P) new par<Integer, Integer>(i+j*w, i+1+j*w));
+                    matriz.add((A) new par<Integer, Integer>(i+j*w, i+1+j*w));
 
                 if (j != h-1)
-                    matriz.add((P) new par<Integer, Integer>(i+j*w, i+(j+1)*w));
+                    matriz.add((A) new par<Integer, Integer>(i+j*w, i+(j+1)*w));
             }
         }
     }
@@ -60,12 +65,10 @@ public class grafo<P extends par<Integer, Integer>> implements gancho {
 
         ArrayList<ArrayList<Integer>> a = new ArrayList<ArrayList<Integer>>(width*height);
 
-        System.out.printf("%d , %d\n", width*height, a.size());
-
         for (int i = 0; i < width*height; i++)
             a.add(i, new ArrayList<Integer>());
 
-        for(P p : matriz) {
+        for(A p : matriz) {
             a.get(p.esq).add(p.dir);
             a.get(p.dir).add(p.esq);
         }
@@ -114,42 +117,35 @@ public class grafo<P extends par<Integer, Integer>> implements gancho {
         obj.callback(m);
     }
 
-    private HashSet<par<HashSet<P>, HashSet<Integer>>>
-
-        kr_init() {
+    @SuppressWarnings(value = "unchecked") private HashSet<E> kr_init() {
         int n = width*height;
 
-        HashSet<par<HashSet<P>, HashSet<Integer>>> p =
-            new HashSet<par<HashSet<P>, HashSet<Integer>>>(n);
+        HashSet<E> p =
+            (HashSet<E>) new HashSet<par<HashSet<par<Integer, Integer>>, HashSet<Integer>>>(n);
 
 
         for (int i = 0; i < n; i++) {
-            HashSet<P> m = new HashSet<P>();
+            HashSet<par<Integer, Integer>> m = new HashSet<par<Integer, Integer>>();
 
             HashSet<Integer> v = new HashSet<Integer>();
             v.add(i);
-            p.add(new par<HashSet<P>, HashSet<Integer>>(m, v));
+            p.add((E) new par<HashSet<par<Integer, Integer>>, HashSet<Integer>>(m, v));
         }
 
         return p;
     }
 
-    private par<HashSet<P>, HashSet<Integer>>
-        kr_busca (HashSet<par<HashSet<P>, HashSet<Integer>>> floresta,
-                  Integer vertice) {
+    private E kr_busca (HashSet<E> floresta, Integer vertice) {
 
 
-        for (par<HashSet<P>, HashSet<Integer>> e : floresta)
+        for (E e : floresta)
             if (e.dir.contains(vertice))
                 return e;
 
         throw new RuntimeException("kr_busca");
     }
 
-    private par<HashSet<P>, HashSet<Integer>>
-        kr_merge (par<HashSet<P>, HashSet<Integer>> v1,
-                  par<HashSet<P>, HashSet<Integer>> v2,
-                  P aresta) {
+    private E kr_merge (E v1, E v2, A aresta) {
 
         v1.esq.addAll(v2.esq);
         v1.dir.addAll(v2.dir);
@@ -159,13 +155,11 @@ public class grafo<P extends par<Integer, Integer>> implements gancho {
         return v1;
     }
 
-    private void
-        kr_passo(HashSet<par<HashSet<P>, HashSet<Integer>>> floresta,
-                 P aresta) {
+    private void kr_passo(HashSet<E> floresta, A aresta) {
 
-        par<HashSet<P>, HashSet<Integer>> v1 =
+        E v1 =
             kr_busca(floresta, aresta.esq);
-        par<HashSet<P>, HashSet<Integer>> v2 =
+        E v2 =
             kr_busca(floresta, aresta.dir);
 
         if (v1 != v2) {
@@ -175,18 +169,18 @@ public class grafo<P extends par<Integer, Integer>> implements gancho {
         }
     }
 
-    public void kruskal() {
-        ArrayList<P> a =
-            new ArrayList<P>(matriz);
+    @SuppressWarnings(value = "unchecked") public void kruskal() {
+        ArrayList<A> a =
+            new ArrayList<A>(matriz);
         Collections.shuffle(a);
 
-        HashSet<par<HashSet<P>, HashSet<Integer>>> floresta = kr_init();
+        HashSet<E> floresta = kr_init();
 
-        for (P i : a)
+        for (A i : a)
             if (floresta.size() > 1)
                 kr_passo(floresta, i);
 
-        matriz = floresta.iterator().next().esq;
+        matriz = (HashSet<A>) floresta.iterator().next().esq;
     }
 
     public boolean[][] linhas_horizontais() {
@@ -196,7 +190,7 @@ public class grafo<P extends par<Integer, Integer>> implements gancho {
             for (int j = 0; j < height+1; j++)
                 paredes[i][j] = true;
 
-        for (P p : matriz) {
+        for (A p : matriz) {
             int x1 = p.esq % width;
             int x2 = p.dir % width;
 
@@ -217,7 +211,7 @@ public class grafo<P extends par<Integer, Integer>> implements gancho {
         paredes[0][0] = false;
         paredes[width][height-1] = false;
 
-        for (P p : matriz) {
+        for (A p : matriz) {
             int y1 = p.esq / width;
             int y2 = p.dir / width;
 
