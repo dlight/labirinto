@@ -3,8 +3,8 @@ import javax.swing.JFrame;
 public class app extends JFrame {
     static int tela_w = 420;
     static int tela_h = 320;
-    static int casas_w = 16;
-    static int casas_h = 12;
+    static int casas_w = 40;
+    static int casas_h = 30;
     static int borda = 10;
 
     public app(grafo g) {
@@ -17,13 +17,12 @@ public class app extends JFrame {
         setTitle("Labirinto");
         setResizable(false);
         setVisible(true);
-
     }
 
     public static void main(String[] args) {
         grafo g = new grafo(casas_w, casas_h);
         g.kruskal();
-        g.print2();
+        g.print();
 
         new app(g);
     }

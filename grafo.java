@@ -1,4 +1,5 @@
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.Collections;
 
 public class grafo {
@@ -9,9 +10,16 @@ public class grafo {
             esq = e;
             dir = d;
         }
+        public boolean equals(par<E, D> p) {
+            return esq.equals(p.esq) && dir.equals(p.dir);
+        }
+        
+        public int hashCode() {
+            return (esq == null ? 0 : esq.hashCode()) * 31 + (dir == null ? 0 : dir.hashCode());
+        }
     }
 
-    private boolean[][] matriz;
+    private HashSet<par<Integer, Integer>> matriz;
     private int width;
     private int height;
 
@@ -19,148 +27,152 @@ public class grafo {
         this.width = w;
         this.height = h;
 
-        int n = w*h;
-
-        matriz = new boolean[n][n];
+        matriz = new HashSet<par<Integer, Integer>>();
 
         for (int i = 0; i < w; i++) {
             for (int j = 0; j < h; j++) {
                 if (i != w-1)
-                    matriz[i+j*w][i+1+j*w] = true;
+                    matriz.add(new par<Integer, Integer>(i+j*w, i+1+j*w));
 
                 if (j != h-1)
-                    matriz[i+j*w][i+(j+1)*w] = true;
+                    matriz.add(new par<Integer, Integer>(i+j*w, i+(j+1)*w));
             }
         }
     }
 
-   private ArrayList<par<Integer, Integer>> arestas() {
-        ArrayList<par<Integer, Integer>> a = new ArrayList<par<Integer, Integer>>();
+    private HashSet<par<HashSet<par<Integer, Integer>>, HashSet<Integer>>>
 
-        for (int i = 0; i < matriz.length; i++)
-            for (int j = 0; j < matriz.length; j++)
-                if (matriz[i][j])
-                    a.add(new par<Integer, Integer>(i, j));
+        kr_init() {
+        int n = width*height;
 
-        return a;
-    }
+        HashSet<par<HashSet<par<Integer, Integer>>, HashSet<Integer>>> p =
+            new HashSet<par<HashSet<par<Integer, Integer>>, HashSet<Integer>>>(n);
 
-    private ArrayList<par<boolean[][], boolean[]>> kr_init() {
-        ArrayList<par<boolean[][], boolean[]>> p =
-            new ArrayList<par<boolean[][], boolean[]>>(matriz.length);
-
-        int n = matriz.length;
 
         for (int i = 0; i < n; i++) {
-            boolean[] v = new boolean[n];
-            v[i] = true;
+            HashSet<par<Integer, Integer>> m = new HashSet<par<Integer, Integer>>();
 
-            //System.out.printf("-- %d\n", i);
-
-            p.add(new par<boolean[][], boolean[]>(new boolean[n][n], v));
+            HashSet<Integer> v = new HashSet<Integer>();
+            v.add(i);
+            p.add(new par<HashSet<par<Integer, Integer>>, HashSet<Integer>>(m, v));
         }
 
         return p;
     }
 
-    private par<boolean[][], boolean[]>
-        kr_busca (ArrayList<par<boolean[][], boolean[]>> floresta,
-                  int vertice) {
-        for (int i = 0; i < floresta.size(); i++)
-            if (floresta.get(i).dir[vertice])
-                return floresta.get(i);
+    private par<HashSet<par<Integer, Integer>>, HashSet<Integer>>
+        kr_busca (HashSet<par<HashSet<par<Integer, Integer>>, HashSet<Integer>>> floresta,
+                  Integer vertice) {
+
+
+        for (par<HashSet<par<Integer, Integer>>, HashSet<Integer>> e : floresta)
+            if (e.dir.contains(vertice))
+                return e;
 
         throw new RuntimeException("kr_busca");
     }
 
-    private par<boolean[][], boolean[]>
-        kr_merge(par<boolean[][], boolean[]> v1,
-                 par<boolean[][], boolean[]> v2,
-                 par<Integer, Integer> aresta) {
-        
-        for (int i = 0; i < v2.esq.length; i++)
-            for (int j = 0; j < v2.esq[i].length; j++)
-                if (v2.esq[i][j])
-                    v1.esq[i][j] = true;
-        
-        for (int i = 0; i < v2.dir.length; i++)
-            if (v2.dir[i])
-                v1.dir[i] = true;
+    private par<HashSet<par<Integer, Integer>>, HashSet<Integer>>
+        kr_merge (par<HashSet<par<Integer, Integer>>, HashSet<Integer>> v1,
+                  par<HashSet<par<Integer, Integer>>, HashSet<Integer>> v2,
+                  par<Integer, Integer> aresta) {
 
-        v1.esq[aresta.esq][aresta.dir] = true;
+        v1.esq.addAll(v2.esq);
+        v1.dir.addAll(v2.dir);
+
+        v1.esq.add(aresta);
 
         return v1;
     }
 
-    private void kr_passo(ArrayList<par<boolean[][], boolean[]>> floresta,
-              par<Integer, Integer> aresta) {
+    private void
+        kr_passo(HashSet<par<HashSet<par<Integer, Integer>>, HashSet<Integer>>> floresta,
+                 par<Integer, Integer> aresta) {
 
-        par<boolean[][], boolean[]> v1 = kr_busca(floresta, aresta.esq);
-        par<boolean[][], boolean[]> v2 = kr_busca(floresta, aresta.dir);
+        par<HashSet<par<Integer, Integer>>, HashSet<Integer>> v1 =
+            kr_busca(floresta, aresta.esq);
+        par<HashSet<par<Integer, Integer>>, HashSet<Integer>> v2 =
+            kr_busca(floresta, aresta.dir);
         
+
+        System.out.printf("> %d\n", floresta.size());
+
         if (v1 != v2) {
             floresta.remove(v1);
             floresta.remove(v2);
             floresta.add(kr_merge(v1, v2, aresta));
+
+        System.out.printf("< %d\n", floresta.size());
+        }
+        else {
+            System.out.printf("= %d\n", floresta.size());
         }
     }
 
     public void kruskal() {
-        ArrayList<par<Integer, Integer>> a = arestas();
+        ArrayList<par<Integer, Integer>> a =
+            new ArrayList<par<Integer, Integer>>(matriz);
         Collections.shuffle(a);
 
-        ArrayList<par<boolean[][], boolean[]>> floresta = kr_init();
+        HashSet<par<HashSet<par<Integer, Integer>>, HashSet<Integer>>> floresta = kr_init();
 
-        for (par<Integer, Integer> i : a) {
-            kr_passo(floresta, i);
-        }
+        System.out.printf("~ %d\n", floresta.size());
 
-        matriz = floresta.get(0).esq;
+        for (par<Integer, Integer> i : a)
+            //if (floresta.size() > 1)
+                kr_passo(floresta, i);
+
+        System.out.printf("~ %d\n", floresta.size());
+
+        matriz = floresta.iterator().next().esq;
     }
 
     public boolean[][] linhas_horizontais() {
         boolean[][] paredes = new boolean[width][height + 1];
 
-        for (int i = 0; i < width; i++) {
-            paredes[i][0] = true;
-            paredes[i][height] = true;
-        }
-
         for (int i = 0; i < width; i++)
-            for (int j = 0; j < height-1; j++)
-                if (!matriz[i+j*width][i+(j+1)*width])
-                    paredes[i][j+1] = true;
+            for (int j = 0; j < height+1; j++)
+                paredes[i][j] = true;
+
+        for (par<Integer, Integer> p : matriz) {
+            int x1 = p.esq % width;
+            int x2 = p.dir % width;
+
+            System.out.printf("H: [%d, %d] (%d, %d)\n", x1, x2, p.esq, p.dir);
+
+            if (x1 == x2)
+                paredes[x1][p.esq / width + 1] = false;
+
+                }
 
         return paredes;
     }
 
     public boolean[][] linhas_verticais() {
         boolean[][] paredes = new boolean[width + 1][height];
-
-        for (int i = 1; i < height; i++)
-            paredes[0][i] = true;
-        for (int i = 0; i < height-1; i++)
-            paredes[width][i] = true;
-
-        for (int i = 0; i < width-1; i++)
+        for (int i = 0; i < width+1; i++)
             for (int j = 0; j < height; j++)
-                if (!matriz[i+j*width][i+1+j*width])
-                    paredes[i+1][j] = true;
+                paredes[i][j] = true;
+
+        paredes[0][0] = false;
+        paredes[width][height-1] = false;
+
+        for (par<Integer, Integer> p : matriz) {
+            int y1 = p.esq / width;
+            int y2 = p.dir / width;
+
+            if (y1 == y2)
+                paredes[p.esq % width + 1][y1] = false;
+                }
 
         return paredes;
     }
 
     public void print() {
-        for (int j = 0; j < height; j++)
-            for (int i = 0; i < width; i++)
-                for (int l = 0; l < height; l++)
-                    for (int k = 0; k < width; k++)
-                        if (matriz[k+l*width][i+j*width])
-                            System.out.printf("(%d, %d) -> (%d, %d)\n", k, l, i, j);
-    }
+        System.out.printf("Printing\n");
 
-    public void print2() {
-        for (par <Integer, Integer> p : arestas())
+        for (par <Integer, Integer> p : matriz)
             System.out.printf("%d -> %d\n", p.esq, p.dir);
+        System.out.printf("Ok.\n");
     }
 }
