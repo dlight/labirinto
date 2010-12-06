@@ -1,8 +1,11 @@
-import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.Collections;
+import java.util.ArrayList;
+import java.util.LinkedList;
+import java.util.Queue;
+import java.util.Stack;
+import java.util.HashSet;
 
-public class grafo {
+public class grafo implements gancho {
     private class par<E, D> {
         private E esq;
         private D dir;
@@ -31,6 +34,85 @@ public class grafo {
                     matriz.add(new par<Integer, Integer>(i+j*w, i+(j+1)*w));
             }
         }
+    }
+
+    static private String[][] array_copy(String[][] a) {
+        String[][] r = new String[a.length][a[0].length];
+
+        for (int i = 0; i < a.length; i++)
+            for (int j = 0; j < a[0].length; j++)
+                r[i][j] = a[i][j];
+
+        return r;
+    }
+
+    static private void print_state(String[][] s) {
+        for (String[] a : s) {
+            for (String e : a)
+                System.out.printf("%s\t", e);
+            System.out.printf("\n");
+        }
+    }
+
+    public void callback(String[][] s) { print_state(s); System.out.printf("\n"); }
+
+    public <U extends gancho> void profundidade(U obj) {
+        Stack<Integer> s = new Stack<Integer>();
+
+        ArrayList<ArrayList<Integer>> a = new ArrayList<ArrayList<Integer>>(width*height);
+
+        System.out.printf("%d , %d\n", width*height, a.size());
+
+        for (int i = 0; i < width*height; i++)
+            a.add(i, new ArrayList<Integer>());
+
+        for(par<Integer, Integer> p : matriz) {
+            a.get(p.esq).add(p.dir);
+            a.get(p.dir).add(p.esq);
+        }
+
+        for (ArrayList<Integer> i : a)
+            Collections.shuffle(i);
+
+        s.push(0);
+
+        String[][] m = new String[width][height];
+
+        int topo, vis;
+        for (topo = s.peek(), vis = -1; topo != width*height-1; vis = topo, topo = s.peek()) {
+            ArrayList<Integer> t = a.get(topo);
+
+            if (t.size() == 0) {
+                m[topo % width][topo / width] = "lixo";
+                s.pop();
+                m[s.peek() % width][s.peek() / width] = "topo";
+            }
+            else {
+                int i = t.get(t.size() - 1);
+
+                s.push(i);
+                t.remove(t.size() - 1);
+                a.get(i).remove(a.get(i).indexOf(topo));
+
+                int xv = vis % width;
+                int yv = vis / width;
+
+                if (vis != -1 && (m[xv][yv] == null ||
+                                  m[xv][yv].equals("topo")))
+                    m[xv][yv] = "caminho";
+
+                int x = topo % width;
+                int y = topo / width;
+
+                m[x][y] = "topo";
+            }
+
+                obj.callback(m);
+        }
+
+        m[vis % width][vis / width] = "caminho";
+        m[topo % width][topo / width] = "fim";
+        obj.callback(m);
     }
 
     private HashSet<par<HashSet<par<Integer, Integer>>, HashSet<Integer>>>
@@ -122,7 +204,7 @@ public class grafo {
             if (x1 == x2)
                 paredes[x1][p.esq / width + 1] = false;
 
-                }
+        }
 
         return paredes;
     }
@@ -151,4 +233,6 @@ public class grafo {
         for (par <Integer, Integer> p : matriz)
             System.out.printf("%d -> %d\n", p.esq, p.dir);
     }
+
+    
 }
