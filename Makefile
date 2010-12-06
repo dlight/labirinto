@@ -8,5 +8,11 @@ clean :
 run : all
 	java app
 
+lap : all
+	java app lap
+
+mini : all
+	java app mini
+
 %.class : %.java
 	javac -source 1.6 $<

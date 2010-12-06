@@ -26,14 +26,14 @@ import java.util.HashSet;
 
 
 public class app extends JFrame {
-    int tela_w = 824;
-    int tela_h = 624;
+    int tela_w;
+    int tela_h;;
     int casas_w = 8;
     int casas_h = 6;
     int borda = 12;
 
-    int min_tm = 10;
-    int max_tm = 700;
+    int min_tm = 3;
+    int max_tm = 600;
     int def_tm = 150;
 
     tela desenho;
@@ -105,7 +105,9 @@ public class app extends JFrame {
         new Thread(new thr(desenho, g)).start();
     }
 
-    public app() {
+    public app(int w, int h) {
+        tela_w = w;
+        tela_h = h;
 
         scr = new JPanel();
 
@@ -150,6 +152,11 @@ public class app extends JFrame {
     }
 
     public static void main(String[] args) {
-        new app();
+        if (args.length >= 1 && args[0].equals("lap"))
+            new app(664, 504);
+        else if (args.length >= 1 && args[0].equals("mini"))
+            new app(224, 174);
+        else
+            new app(824, 624);
     }
 }
