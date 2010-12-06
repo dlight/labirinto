@@ -18,10 +18,8 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
 import javax.swing.JPanel;
-import javax.swing.Timer;
 
-public class tela extends JPanel implements ActionListener, gancho {
-    Timer timer;
+public class tela extends JPanel implements gancho {
     int borda;
     int tela_largura, tela_altura;
 
@@ -48,9 +46,6 @@ public class tela extends JPanel implements ActionListener, gancho {
         setPreferredSize(new Dimension(tela_w, tela_h));
         setBackground(Color.white);
         setDoubleBuffered(true);
-
-        //timer = new Timer(1000, this);
-        //timer.start();
     }
 
     public void desenhar_linha(Graphics2D g, int x0, int y0, int x1, int y1) {
@@ -122,10 +117,6 @@ public class tela extends JPanel implements ActionListener, gancho {
         Toolkit.getDefaultToolkit().sync();
         tela.dispose();
      }
-
-    public void actionPerformed(ActionEvent e) {
-        repaint();  
-    }
 
     static private String[][] array_copy(String[][] a) {
         String[][] r = new String[a.length][a[0].length];
