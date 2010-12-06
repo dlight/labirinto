@@ -2,7 +2,7 @@
 .PHONY: clean
 .PHONY: run
 
-all : app.class grafo.class tela.class
+all : app.class grafo.class tela.class var.class
 clean :
 	rm -f *.class
 run : all

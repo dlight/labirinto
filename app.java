@@ -11,12 +11,16 @@ import javax.swing.JPanel;
 
 import javax.swing.JButton;
 import javax.swing.JComboBox;
+import javax.swing.JSlider;
 
 import java.awt.GridLayout;
 import java.awt.Dimension;
 
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
+
+import javax.swing.event.ChangeEvent;
+import javax.swing.event.ChangeListener;
 
 import java.util.HashSet;
 
@@ -28,7 +32,8 @@ public class app extends JFrame {
     int casas_h = 6;
     int borda = 12;
 
-    static int sleep = 80;
+    tela desenho;
+    JPanel scr;
 
     private class size {
         public int w, h;
@@ -55,8 +60,11 @@ public class app extends JFrame {
         }
     }
 
-    tela desenho;
-    JPanel scr;
+    private class slider_listener implements ChangeListener {
+        public void stateChanged(ChangeEvent e) {
+            var.sleep = 700 - ((JSlider) e.getSource()).getValue() + 10;
+        }
+    }
 
     private class thr implements Runnable {
         tela t;
@@ -85,7 +93,7 @@ public class app extends JFrame {
         g.kruskal();
 
         desenho = new tela(borda, tela_w, tela_h, casas_w, casas_h,
-                          g.linhas_horizontais(), g.linhas_verticais(), sleep);
+                          g.linhas_horizontais(), g.linhas_verticais());
 
         scr.add(desenho);
         scr.validate();
@@ -99,7 +107,7 @@ public class app extends JFrame {
 
         JPanel q = new JPanel();
 
-        q.setLayout(new GridLayout(2, 1, 5, 10));
+        q.setLayout(new GridLayout(3, 1, 5, 10));
 
         JComboBox j = new JComboBox();
         j.addItem(new size(8, 6, "pequeno"));
@@ -109,12 +117,18 @@ public class app extends JFrame {
 
         JButton b = new JButton("Reiniciar");
 
+        JSlider slider = new JSlider(10, 700, 700 - 80);
+        var.sleep = 80;
+
+        slider.addChangeListener(new slider_listener());
+
         b.setMinimumSize(new Dimension(500, 500));
 
         b.addActionListener(new button_listener());
 
-        q.add(b);
+        q.add(slider);
         q.add(j);
+        q.add(b);
 
         scr.add(q);
 
