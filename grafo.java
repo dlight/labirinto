@@ -93,19 +93,11 @@ public class grafo {
             kr_busca(floresta, aresta.esq);
         par<HashSet<par<Integer, Integer>>, HashSet<Integer>> v2 =
             kr_busca(floresta, aresta.dir);
-        
-
-        System.out.printf("> %d\n", floresta.size());
 
         if (v1 != v2) {
             floresta.remove(v1);
             floresta.remove(v2);
             floresta.add(kr_merge(v1, v2, aresta));
-
-        System.out.printf("< %d\n", floresta.size());
-        }
-        else {
-            System.out.printf("= %d\n", floresta.size());
         }
     }
 
@@ -116,13 +108,9 @@ public class grafo {
 
         HashSet<par<HashSet<par<Integer, Integer>>, HashSet<Integer>>> floresta = kr_init();
 
-        System.out.printf("~ %d\n", floresta.size());
-
         for (par<Integer, Integer> i : a)
-            //if (floresta.size() > 1)
+            if (floresta.size() > 1)
                 kr_passo(floresta, i);
-
-        System.out.printf("~ %d\n", floresta.size());
 
         matriz = floresta.iterator().next().esq;
     }
@@ -137,8 +125,6 @@ public class grafo {
         for (par<Integer, Integer> p : matriz) {
             int x1 = p.esq % width;
             int x2 = p.dir % width;
-
-            System.out.printf("H: [%d, %d] (%d, %d)\n", x1, x2, p.esq, p.dir);
 
             if (x1 == x2)
                 paredes[x1][p.esq / width + 1] = false;
@@ -169,10 +155,7 @@ public class grafo {
     }
 
     public void print() {
-        System.out.printf("Printing\n");
-
         for (par <Integer, Integer> p : matriz)
             System.out.printf("%d -> %d\n", p.esq, p.dir);
-        System.out.printf("Ok.\n");
     }
 }

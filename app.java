@@ -22,7 +22,6 @@ public class app extends JFrame {
     public static void main(String[] args) {
         grafo g = new grafo(casas_w, casas_h);
         g.kruskal();
-        g.print();
 
         new app(g);
     }
