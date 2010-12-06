@@ -11,7 +11,9 @@ import javax.swing.JPanel;
 
 import javax.swing.JButton;
 import javax.swing.JComboBox;
-import javax.swing.BoxLayout;
+
+import java.awt.GridLayout;
+import java.awt.Dimension;
 
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
@@ -97,17 +99,19 @@ public class app extends JFrame {
 
         JPanel q = new JPanel();
 
-        q.setLayout(new BoxLayout(q, BoxLayout.Y_AXIS));
+        q.setLayout(new GridLayout(2, 1, 5, 10));
 
         JComboBox j = new JComboBox();
-        j.addItem(new size(8, 6, "mínimo"));
-        j.addItem(new size(20, 15, "pequeno"));
+        j.addItem(new size(8, 6, "pequeno"));
+        j.addItem(new size(20, 15, "médio"));
         j.addItem(new size(40, 30, "grande"));
         j.addActionListener(new size_listener());
 
         JButton b = new JButton("Reiniciar");
-        b.addActionListener(new button_listener());
 
+        b.setMinimumSize(new Dimension(500, 500));
+
+        b.addActionListener(new button_listener());
 
         q.add(b);
         q.add(j);
