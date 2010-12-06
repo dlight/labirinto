@@ -32,6 +32,10 @@ public class app extends JFrame {
     int casas_h = 6;
     int borda = 12;
 
+    int min_tm = 10;
+    int max_tm = 700;
+    int def_tm = 150;
+
     tela desenho;
     JPanel scr;
 
@@ -62,7 +66,7 @@ public class app extends JFrame {
 
     private class slider_listener implements ChangeListener {
         public void stateChanged(ChangeEvent e) {
-            var.sleep = 700 - ((JSlider) e.getSource()).getValue() + 10;
+            var.sleep = max_tm - ((JSlider) e.getSource()).getValue() + min_tm;
         }
     }
 
@@ -117,8 +121,8 @@ public class app extends JFrame {
 
         JButton b = new JButton("Reiniciar");
 
-        JSlider slider = new JSlider(10, 700, 700 - 80);
-        var.sleep = 80;
+        JSlider slider = new JSlider(min_tm, max_tm, max_tm - def_tm);
+        var.sleep = def_tm;
 
         slider.addChangeListener(new slider_listener());
 
