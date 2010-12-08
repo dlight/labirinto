@@ -15,13 +15,13 @@ clean :
 mrproper: clean
 	rm -f *.pdf
 
-run : all
+run : prog
 	java app
 
-lap : all
+lap : prog
 	java app lap
 
-mini : all
+mini : prog
 	java app mini
 
 %.class : %.java

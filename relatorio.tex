@@ -96,6 +96,8 @@ basicamente, a classe \emph{Aresta}, que poderíamos ter
 feito. Aparentemente, se seguissemos a prática usual, o programa seria
 mais simples)
 
+\section*{Execução}
+
 O programa começa a ser executado na classe \emph{app}, que cria uma
 janela usando \emph{Swing}. Lá o método mais importante chama-se
 \emph{reiniciar\_size} (não é um nome muito bom). Ele é chamado no
@@ -115,6 +117,16 @@ chama um método da tela, passando uma matriz de strings, que representa
 o estado de cada casa. A tela desenha o correspondente, e pausa por um
 determinado tempo. Esse tempo é configurável deslizando uma barra na
 janela.
+
+\section*{Compilando}
+
+O programa acompanha um Makefile. Para compilar tudo, e gerar esse
+relatório no formato pdf, digite \emph{make}. E para executar,
+\emph{make run}.
+
+Mesmo sem utilizar o Makefile, compilar e rodar resume-se a \emph{javac
+  *.java} e \emph{java app}. Pode-se escolher tamanhos diferentes para a
+janela com \emph{java app mini} e \emph{java app lap}.
 
 \section*{Conclusão}
 
