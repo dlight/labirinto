@@ -3,7 +3,7 @@
  * Labirinto
  *
  * Alunos: Elias Gabriel Amaral da Silva
- *         Flávio Fernando Vasconcelos
+ *         Flavio Fernando Vasconcelos
  */
 
 public class par<E, D> {

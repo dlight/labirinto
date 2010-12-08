@@ -3,7 +3,7 @@
  * Labirinto
  *
  * Alunos: Elias Gabriel Amaral da Silva
- *         Flávio Fernando Vasconcelos
+ *         Flavio Fernando Vasconcelos
  */
 
 import javax.swing.JFrame;
@@ -117,7 +117,7 @@ public class app extends JFrame {
 
         JComboBox j = new JComboBox();
         j.addItem(new size(8, 6, "pequeno"));
-        j.addItem(new size(20, 15, "médio"));
+        j.addItem(new size(20, 15, "medio"));
         j.addItem(new size(40, 30, "grande"));
         j.addActionListener(new size_listener());
 
