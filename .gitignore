@@ -6,3 +6,8 @@
 
 # gerados pelo javac
 *.class
+
+# latex
+*.aux
+*.log
+*.pdf

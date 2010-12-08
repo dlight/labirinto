@@ -1,10 +1,20 @@
 .PHONY: all
 .PHONY: clean
+.PHONY: mrproper
 .PHONY: run
 
-all : app.class grafo.class tela.class var.class
+all: prog doc
+
+doc: relatorio.pdf
+
+prog : app.class grafo.class tela.class var.class
+
 clean :
-	rm -f *.class
+	rm -f *.class *.log *.aux
+
+mrproper: clean
+	rm -f *.pdf
+
 run : all
 	java app
 
@@ -16,3 +26,6 @@ mini : all
 
 %.class : %.java
 	javac -source 1.6 $<
+
+%.pdf: %.tex
+	pdflatex $^

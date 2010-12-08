@@ -1,0 +1,130 @@
+\documentclass{article}
+\usepackage[utf8]{inputenc}
+\usepackage[brazil]{babel}
+\begin{document}
+
+\title{Relatório do trabalho final de Algoritmos e Estruturas de Dados
+  II\\
+  \large Universidade Federal do Rio Grande do Norte}
+
+\author{Elias Gabriel Amaral da Silva
+  \and Flávio Fernando Vasconcelos}
+
+\maketitle
+
+\begin{abstract}
+Este documento descreve o trabalho da terceira unidade das disciplinas
+Algoritmos e Estruturas de Dados II e Prática de Algoritmo e Estrutura
+de Dados II. Nós implementamos na linguagem Java um programa que desenha
+e resolve um labirinto. O programa empregou algoritmos de grafo vistos
+em sala de aula.
+\end{abstract}
+
+\section*{Problema}
+
+Propomos o problema de desenhar um labirinto, e percorre-lo da entrada
+até encontrar a saída. O labirinto é uma grade retangular de
+casas. Pensado como um grafo, cada casa é um vértice, podendo estar
+conectado a cada casa adjacente, sendo essa passagem marcada por uma
+aresta. Uma parede entre duas casas adjacentes é portanto considerada a
+falta de uma aresta entre elas. (Casas não-adjacentes nunca são
+conectadas por arestas).
+
+O problema se divide, naturalmente, em duas partes: gerar um labirinto
+válido (conexo), e percorre-lo. Decidimos que o labirinto não teria
+ciclos, e que portanto existiria um único caminho entre a entrada e a
+saída; e que o andamento do programa seria exibido graficamente.
+
+\section*{Algoritmos}
+
+Ao determinar que o labirinto seria conexo e sem ciclos, percebemos que
+gerar um labirinto é o mesmo que gerar uma árvore de cobertura mínima
+para um grafo formado por uma grade retangular completa de vértices ---
+isto é, de um labirinto sem paredes. Precisamos, portanto, de adicionar
+paredes à um labirinto inicialmente vazio, até que ele não tenha ciclos,
+nem casas isoladas.
+
+Geramos um labirinto usando o \emph{algoritmo de Kruskal}. Colocamos em
+uma lista \emph{l} um grafo unitário para cada casa, e para cada aresta
+\emph{A}, unimos os grafos de \emph{l} que são conectados por
+\emph{A}. Paramos quando só há um grafo restante.
+
+Para evitar gerar sempre o mesmo labirinto, embaralhamos as arestas
+antes de percorre-las.
+
+Percorremos o grafo resultante usando uma busca em
+profundidade. Armazenamos uma lista de que vértices estão conectados a
+cada vértice. Embaralhamos, também, essa, para tornar a busca aleatória.
+
+\section*{Implementação}
+
+Inicialmente escolhemos uma matriz de adjacência para representar o
+grafo. Isso se mostrou um problema --- Kruskal é inicializado com
+\emph{n} grafos unitários, o que coloca a utilização de memória na ordem
+de \emph{$O(n^3)$}. Como consequência, o programa usava aproximadamente
+\emph{600mb} de memória, ao lidar com um labirinto \emph{$32 \times
+  24$}.
+
+Observamos que esses grafos possuem poucas arestas. Resolvemos portanto
+utilizar uma matriz esparsa, que armazena somente dados úteis (no caso,
+quais as arestas presentes). Isso tem o mesmo uso de memória que uma
+lista de adjacência, mas permite rapidamente testar se dois vertices são
+adjacentes. Em Java, pode-se representar uma matriz esparsa usando um
+conjunto de pares de vértices. Criamos uma classe \emph{par}, e usamos
+um \emph{HashSet} para representar um conjunto. Cada vértice é
+representado como um inteiro --- da mesma forma que seria numa matriz de
+adjacência --- e portanto a matriz (esparsa) de adjacência tem tipo
+\emph{$HashSet \langle par \langle Integer, Integer \rangle \rangle$}.
+
+Utilizamos a classe par também ao representar os grafos intermediários
+do algoritmo de Kruskal, já que eles precisam também armazenar os
+vértices que o grafo contém. Um grafo ali é representado como uma matriz
+de adjacência, e um conjunto de vértices. Tem portanto tipo:\\
+\\
+\emph{$par \langle HashSet \langle par \langle Integer, Integer \rangle
+  , HashSet \langle Integer \rangle \rangle \rangle$}
+\\
+\\Um tipo desse tamanho é meio desconcertante. Java não possui algo
+semelhante a typedef. Para emula-lo, usamos generics: passamos esse tipo
+como \emph{E} e o tipo \emph{$par \langle Integer, Integer \rangle$}
+como \emph{A}.
+
+(O nosso grafo saiu da prática convencional de se separar uma classe
+para o grafo, uma para o vértice, uma para a aresta, etc. O professor
+Eduardo comentou que \emph{$par \langle Integer, Integer \rangle$} é,
+basicamente, a classe \emph{Aresta}, que poderíamos ter
+feito. Aparentemente, se seguissemos a prática usual, o programa seria
+mais simples)
+
+O programa começa a ser executado na classe \emph{app}, que cria uma
+janela usando \emph{Swing}. Lá o método mais importante chama-se
+\emph{reiniciar\_size} (não é um nome muito bom). Ele é chamado no
+início do programa, e sempre que o botão ``Reiniciar'' ou um menu de
+mudar o tamanho do grafo é chamado (o nome originalmente se referia à
+reiniciar o grafo, mudando o tamanho dele). Esse método cria um novo
+grafo, executa Kruskal, e cria um objeto chamado \emph{tela}.
+
+Esse objeto realiza todo o desenho na tela, usando \emph{Java2D}. Ele
+não lida com as estruturas de dados do grafo: para desenhar um
+labirinto, ele recebe uma matriz com as paredes verticais e outra com as
+paredes horizontais (isto torna o algoritmo de desenho óbvio).
+
+A animação do grafo é feita passando a tela ao método
+\emph{profundidade} do grafo. Ele percorre o grafo, e a cada passo,
+chama um método da tela, passando uma matriz de strings, que representa
+o estado de cada casa. A tela desenha o correspondente, e pausa por um
+determinado tempo. Esse tempo é configurável deslizando uma barra na
+janela.
+
+\section*{Conclusão}
+
+O projeto foi mais complexo do que o previsto. Talvez por não termos
+muita experiência com Java, mudar todas as estruturas de dados para
+fugir da complexidade de espaço \emph{$O(n^3)$} se mostrou
+complicado. Vimos outros algoritmos para gerar labirintos --- Kruskal
+tende a gerar labirintos monótonos, com corredores pequenos --- mas não
+foi possível implementa-los. Um aprendizado seria, talvez, que a falta
+de typedefs em Java tem um propósito --- Java não favorece o uso de
+tipos muito complexos.
+
+\end{document}
